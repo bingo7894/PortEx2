@@ -7,21 +7,33 @@
 
 	"use strict";
 
-	$(window).stellar({
-    responsive: true,
-    parallaxBackgrounds: true,
-    parallaxElements: true,
-    horizontalScrolling: false,
-    hideDistantElements: false,
-    scrollProperty: 'scroll'
-  });
+	var isMobile = window.matchMedia("(max-width: 991.98px)").matches;
+
+	if (!isMobile) {
+		$(window).stellar({
+	    responsive: true,
+	    parallaxBackgrounds: true,
+	    parallaxElements: true,
+	    horizontalScrolling: false,
+	    hideDistantElements: false,
+	    scrollProperty: 'scroll'
+	  });
+	}
 
 
 	var fullHeight = function() {
 
-		$('.js-fullheight').css('height', $(window).height());
+		var setHeight = function() {
+			if (window.matchMedia("(max-width: 991.98px)").matches) {
+				$('.js-fullheight').css('height', 'auto');
+			} else {
+				$('.js-fullheight').css('height', $(window).height());
+			}
+		};
+
+		setHeight();
 		$(window).resize(function(){
-			$('.js-fullheight').css('height', $(window).height());
+			setHeight();
 		});
 
 	};
@@ -38,7 +50,9 @@
 	loader();
 
 	// Scrollax
-   $.Scrollax();
+   if (!isMobile && typeof $.Scrollax === 'function') {
+   	$.Scrollax();
+   }
 
 
 
@@ -92,11 +106,15 @@
 	    animateIn: 'fadeIn',
 	    nav:false,
 	    autoplayHoverPause: false,
+	    touchDrag: !isMobile,
+	    mouseDrag: !isMobile,
+	    pullDrag: !isMobile,
 	    items: 1,
 	    navText : ["<span class='ion-md-arrow-back'></span>","<span class='ion-chevron-right'></span>"],
 	    responsive:{
 	      0:{
-	        items:1
+	        items:1,
+	        stagePadding: 0
 	      },
 	      600:{
 	        items:1
@@ -274,4 +292,3 @@
 
 
 })(jQuery);
-
